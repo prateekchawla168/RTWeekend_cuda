@@ -7,15 +7,15 @@ endif()
 
 if(WIN32)
 message(STATUS "Project is building for Windows")
-set(CUDA_TOOLKIT_ROOT_DIR "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6")
-set(CMAKE_CUDA_COMPILER "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/bin/nvcc.exe")
+set(CUDA_TOOLKIT_ROOT_DIR "$ENV{CUDA_PATH}")
+set(CMAKE_CUDA_COMPILER "$ENV{CUDA_PATH}/bin/nvcc.exe")
 endif()
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     message(STATUS "Building in Debug mode")
 endif()
 
-project(RTWeekend_CUDA LANGUAGES CXX CUDA)
+project(RTWeekend_CUDA LANGUAGES C CXX CUDA)
 
 message("Project name: " ${CMAKE_PROJECT_NAME})
 
@@ -33,9 +33,11 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib )
 
 include_directories(
-    include/
-    lib/
+    "src"
 )
+
+include_directories(${CMAKE_SOURCE_DIR}/external/stb_image)
+link_directories(${CMAKE_SOURCE_DIR}/external/stb_image)
 
 add_executable(${CMAKE_PROJECT_NAME})
 
@@ -44,6 +46,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 target_compile_options(${CMAKE_PROJECT_NAME}
+    PRIVATE $<$<COMPILE_LANGUAGE:C>: >
     PRIVATE $<$<COMPILE_LANGUAGE:CXX>: >
     PRIVATE $<$<COMPILE_LANGUAGE:CUDA>: -Xcudafe --diag_suppress=esa_on_defaulted_function_ignored --expt-relaxed-constexpr>
 )
