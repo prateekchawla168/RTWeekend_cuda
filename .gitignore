@@ -228,3 +228,4 @@ stage1/
 build/
 out/
 
+env.cmake
