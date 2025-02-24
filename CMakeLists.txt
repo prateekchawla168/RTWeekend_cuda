@@ -22,6 +22,9 @@ project(RTWeekend_CUDA LANGUAGES C CXX CUDA)
 
 message("Project name: " ${CMAKE_PROJECT_NAME})
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CUDA_STANDARD 17)
+
 find_package(vulkan REQUIRED)
 
 if (DEFINED GLFW_PATH)
@@ -34,9 +37,6 @@ else()
   find_package(glfw3 REQUIRED)
 endif()
 
- 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CUDA_STANDARD 17)
 
 if (MSVC)
     message(STATUS "Building for Windows with MSVC")
@@ -99,18 +99,18 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    ${PROJECT_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/include
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
     ${GLM_PATH}
     ${IMGUI_DIR} ${IMGUI_DIR}/backends
-    )
+)
 
 target_link_directories(${PROJECT_NAME} PUBLIC
     ${Vulkan_SDK_PATH}/Libs
     ${GLFW_LIB}
     ${IMGUI_DIR} ${IMGUI_DIR}/backends
-  )
+)
 
 target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan)
 target_link_libraries(${PROJECT_NAME} glfw3)
